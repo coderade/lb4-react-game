@@ -21,6 +21,8 @@ services:
       context: lb4-backend
       dockerfile: Dockerfile
     container_name: "lb4-backend"
+    env_file:
+      - ./lb4-backend/lb4-backend.env
     depends_on:
       - mongodb
     volumes:
