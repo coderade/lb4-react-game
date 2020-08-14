@@ -1,0 +1,35 @@
+version: "3.5"
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    command: mongod --quiet --syslog
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - game-api-network
+
+  backend:
+    image: lb4-backend
+    build:
+      context: lb4-backend
+      dockerfile: Dockerfile
+    container_name: "lb4-backend"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./lb4-backend:/app
+    ports:
+      - "3000:3000"
+    networks:
+      - game-api-network
+
+networks:
+  game-api-network:
+    driver: bridge
